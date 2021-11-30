@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+
+<html>
+    <!!-- this is incomplete html, with no css -->
+    
+    <head><title>Location page</title></head>  
+  
+    <body>
+    
+        <h1>Location of food item "{{ item.foodName }}"</h1>
+
+        <p>Location: {{item.foodLocation}}</p> 
+        {# need to insert the image, that can come later (if at all) #}
+        
+        
+        <p>⠀</p>
+        <p><a href="/ffdb/{{item.id}}">Link back to detail page</a></p>
+        <p>⠀</p>
+        <p><a href="/ffdb">Link to index page</a></p>
+        <p><a href="/admin/ffdb/fooditems/">Link to admin page</a></p>
+    
+
+    </body>
+</html>

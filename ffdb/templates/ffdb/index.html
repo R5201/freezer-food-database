@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html>
+    <!!-- this is incomplete html -->
+    
+    <head><title>Index page</title></head>  
+  
+    <body>
+    
+    <h1>Index of all items in the DataBase</h1>
+
+    {% if all_food_items %}
+        <ul>
+        {% for food in all_food_items %}
+            <!-- This is supposed to use the "i" in the for loop, food, not foodItems, which I was trying to use this whole time-->
+            <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+            <!-- Ex: "Food item Pizza is in location: 2.2"-->
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>There is no food in the Freezer Food DataBase</p>
+    {% endif %}
+
+
+    <p><a href='/admin/ffdb/fooditems/'>Link to admin page</a></p>
+    </body>
+</html>
