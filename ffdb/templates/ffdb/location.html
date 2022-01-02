@@ -12,7 +12,10 @@
         <p>Location: {{item.foodLocation}}</p> 
         {# need to insert the image, that can come later (if at all) #}
         
-        
+        {% load static %}
+        <img src="{% static 'ffdb/animated.gif' %}" title="Location image for {{item.foodLocation}}" alt="Location image for {{item.foodLocation}}">
+
+
         <p>⠀</p>
         <p><a href="/ffdb/{{item.id}}">Link back to detail page</a></p>
         <p>⠀</p>
