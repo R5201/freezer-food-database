@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.template import context, loader
 
-from .models import foodItems
+from .models import foodItems, foodStock
 
 # ex. /ffdb/
 def index(request):
@@ -19,11 +19,12 @@ def index(request):
 # ex. /ffdb/1/
 def detail(request, foodItems_id):
     item = get_object_or_404(foodItems, pk=foodItems_id)
+    stock = get_object_or_404(foodStock, pk=foodItems_id)
     #//template = loader.get_template('ffdb/detail.html')
     #//context = {
     #//    'item': item,    
     #//}
-    return render(request, "ffdb/detail.html", {'item': item})
+    return render(request, "ffdb/detail.html", {'item': item, 'stock': stock})
     #//return HttpResponse(template.render(context, request))
 
     #//return HttpResponse("You're looking at food item %s." % foodItems_id)
@@ -32,11 +33,15 @@ def detail(request, foodItems_id):
 # /ffdb/1/location
 def location(request, foodItems_id):
     item = get_object_or_404(foodItems, pk=foodItems_id)
+    
+    location_qs = str(foodItems.objects.filter(pk=foodItems_id).values('foodLocation'))
+    location_id = location_qs[29:32]
+    location = "ffdb/%s.png" % location_id
     #//template = loader.get_template('ffdb/location.html')
     #//context = {
     #//    'item': item,    
     #//}
-    return render(request, "ffdb/location.html", {'item': item})
+    return render(request, "ffdb/location.html", {'item': item, 'location': location})
     #//return HttpResponse(template.render(context, request))
     
     #//response = "You're looking at the location of food item %s."

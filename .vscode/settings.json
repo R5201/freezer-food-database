@@ -2,7 +2,8 @@
     "python.pythonPath": "env\\Scripts\\python.exe",
     "cSpell.words": [
         "ffdb",
-        "fooditems"
+        "fooditems",
+        "Itemss"
     ],
     "cSpell.enableFiletypes": [
         "django-html"
