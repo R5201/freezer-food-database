@@ -1,27 +1,54 @@
 <!DOCTYPE html>
 
 <html>
-    <!!-- this is incomplete html -->
-    
-    <head><title>Index page</title></head>  
+    <!!-- this is incomplete html, with no css -->
+
+{% load static %}    
+    <head>
+        <title>Index page</title>
+        <link rel="icon" type="image/png" href="{% static 'ffdb/favicon.png' %}">
+    </head>  
   
     <body>
     
-    <h1>Index of all items in the DataBase</h1>
+        <h1>Index of all items in the DataBase</h1>
 
-    {% if all_food_items %}
-        <ul>
-        {% for food in all_food_items %}
-            <!-- This is supposed to use the "i" in the for loop, food, not foodItems, which I was trying to use this whole time-->
-            <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
-            <!-- Ex: "Food item Pizza is in location: 2.2"-->
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>There is no food in the Freezer Food DataBase</p>
-    {% endif %}
+        <form action='{% url 'index' %}' method='GET'>
+            <input name='q' type='search' placeholder='Search...' id='searchbar' autofocus> <!-- search box -->
+            <button for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></button> <!--(built in) Search icon-->
+        </form>
 
+        {% if object_list %} <!-- Displays search results -->
+            <p>You searched for "<b>{{ query }}</b>". Here are your results: <a href='/ffdb/'>Clear search</a></p>
+            <ul>
+                {% for food in object_list %}
+                <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+                {% endfor %}
+            </ul>
 
-    <p><a href='/admin/ffdb/fooditems/'>Link to admin page</a></p>
+        {% elif not object_list and query %} <!-- Displays all in DB if no results -->
+            <p>Your query "<b>{{ query }}</b>" returned no results. Below are all of the items in the DataBase. <a href='/ffdb/'>Clear search</a></p>
+            <ul>
+                {% for food in all_food_items %} 
+                <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+                {% endfor %}
+            </ul>
+            
+        {% elif all_food_items %} <!-- Displays all if no search made -->
+            <ul>
+                {% for food in all_food_items %}
+                <!-- This is supposed to use the "i" in the for loop, food, not foodItems, which I was trying to use this whole time-->
+                <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+                <!-- Ex: "Food item Pizza is in location: 2.2"-->
+                {% endfor %}
+            </ul>
+        
+        {% else %} <!-- Displays if there is nothing in the DB -->
+            <p>There is no food in the Freezer Food DataBase</p>
+
+        {% endif %}
+
+        <p>⠀</p>
+        <p><a href='/admin/ffdb/fooditems/'>Link to admin page</a></p>
     </body>
 </html>

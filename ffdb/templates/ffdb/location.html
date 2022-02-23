@@ -2,8 +2,12 @@
 
 <html>
     <!!-- this is incomplete html, with no css -->
-    
-    <head><title>Location page</title></head>  
+
+{% load static %}
+    <head>
+        <title>Location page</title>
+        <link rel="icon" type="image/png" href="{% static 'ffdb/favicon.png' %}">
+    </head>  
   
     <body>
     
@@ -12,7 +16,6 @@
         <p>Location: {{item.foodLocation}}</p> 
         {# need to insert the image, that can come later (if at all) #}
         
-        {% load static %}
         <img src="{% static location %}" title="Location image for {{item.foodLocation}}" alt="Location image for {{item.foodLocation}}">
         
         <p>GIF of all possible locations</p>

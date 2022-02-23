@@ -3,14 +3,24 @@ from django import template
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.template import context, loader
-
+from django.db.models import Q
 from .models import foodItems, foodStock
 
 # ex. /ffdb/
 def index(request):
     all_food_items = foodItems.objects.all()
     template = loader.get_template('ffdb/index.html')
-    context = {'all_food_items': all_food_items}
+    query = request.GET.get('q')
+    if query != None:
+        object_list = foodItems.objects.filter(Q(foodName__icontains=query) | Q(foodLocation__iexact=query))
+        context = {
+            'all_food_items': all_food_items,
+            'object_list': object_list,
+            'query': query,  
+        }
+    else:
+        context = {'all_food_items': all_food_items}
+    
     return HttpResponse(template.render(context, request))
     
     #//return render(request, 'ffdb/index.html', context))
@@ -20,6 +30,8 @@ def index(request):
 def detail(request, foodItems_id):
     item = get_object_or_404(foodItems, pk=foodItems_id)
     stock = get_object_or_404(foodStock, pk=foodItems_id)
+    
+    
     #//template = loader.get_template('ffdb/detail.html')
     #//context = {
     #//    'item': item,    
