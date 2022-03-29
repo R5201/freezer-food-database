@@ -7,22 +7,77 @@
     <head>
         <title>Detail page</title>
         <link rel="icon" type="image/png" href="{% static 'ffdb/favicon.png' %}">
+        <script>
+            function validate() {
+                var x = document.forms["delete"]["deletion_confirm"];                
+                if (x.value == "{{ item.foodName }}") {                    
+                    if (confirm('Are you sure?')){
+                        return true;
+                    }
+                    else{
+                        alert('cancelled')
+                        return false                                               
+                    }
+
+                }
+            }
+            </script>
     </head>  
   
     <body>
     
-        <h1>Detail of food item "{{ item.foodName }}"</h1>
+        <h1>Details of food item "{{ item.foodName }}"</h1>
 
-        <p><a href="location/">Location: {{item.foodLocation}}</a></p> 
-        <p>⠀</p>
-        <p>Stock level: {{stock.stockNumber}}</p>
-        <p>Notes: {{ item.foodItemNotes }}</p>
+
+            <p><a href="location/">Location: {{item.foodLocation}}</a></p></br>        
+            <p>Stock level: {{stock.stockNumber}}</p>
+            <p>Notes: {{ item.foodItemNotes }}</p><br/>
+
+
+        <h2>Edit this item</h2>
+            <form name='edit' action='' method='POST'>{% csrf_token %}
+                  <input name='Name' type='text' value='{{ item.foodName }}' id='name' required></br>
+                
+                <label for='location'>Location:</label>
+                <input name='Location' type='text' value='{{ item.foodLocation }}' id='location' required pattern='([1]\.[1-5])|([2]\.[1-4])|([3]\.[12])' title='X.X, eg. 1.2 or 3.1'></br>
+                
+                <label for='stock'>Stock:</label>
+                <input name='Number' type='Number' value='{{ stock.stockNumber }}' id='stock' min='1' required></br>
+                
+                <label for='notes'>Notes:</label>
+                <textarea name='Notes' type='text' id='notes' rows='5' cols='50' maxlength='200'>{{ item.foodItemNotes }}</textarea></br>
+
+                <input name='item_id' id='item_id' value='{{ fI_id }}' hidden> <!-- get id of current item-->
+                <input name='edit_id' id ='edit_id' value='edit_detail' hidden> <!-- for identifying what did the POST-->
+
+                <button>Edit</button>
+            </form></br>
+
+            {% if edit_confirmation %} <!-- only shows if edit was made -->
+                <form name='refresh' action=''>
+                    <label for='refresh'>{{ edit_confirmation}}</label>
+                    <button id='refresh'>Refresh</button>
+                </form></br>
+            {% endif %}
+
+
+        </br><h2>Delete this item</h2>
+                <form name='delete' action='{% url 'index' %}' method='POST' onsubmit="return validate()" autocomplete="off">{% csrf_token %}
+
+                    <label for='deletion_confirm'>Enter the name of the item to confirm (case sensitive):</label>
+                    <input name='deletion_confirm' id='deletion_confirm' placeholder='{{ item.foodName }}' pattern='{{ item.foodName }}' required>
+                    
+                    <input name='item_id' id='item_id' value='{{ fI_id }}' hidden> <!-- primary key-->
+                    <input name='deletion_id' id ='deletion_id' value='delete_detail' hidden> <!-- for identifying the POST method as a deletion request-->
+                    
+                    <p><font color='red'><b>Caution, this will permanently delete the item! No recovery possible!</b></font></p> <!-- <font> is deprecated - use css -->
+                    
+                    <input type='submit' value='Delete'/>
+                </form>
 
         <!--"Footer"-->
-        <p>⠀</p>
+        </br>
         <p><a href="/ffdb">Link to index page</a></p>
         <p><a href="/admin/ffdb/fooditems/">Link to admin page</a></p>
-    
-
     </body>
 </html>

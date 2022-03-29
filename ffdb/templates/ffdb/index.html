@@ -10,45 +10,78 @@
     </head>  
   
     <body>
-    
-        <h1>Index of all items in the DataBase</h1>
-
-        <form action='{% url 'index' %}' method='GET'>
-            <input name='q' type='search' placeholder='Search...' id='searchbar' autofocus> <!-- search box -->
-            <button for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></button> <!--(built in) Search icon-->
-        </form>
-
-        {% if object_list %} <!-- Displays search results -->
-            <p>You searched for "<b>{{ query }}</b>". Here are your results: <a href='/ffdb/'>Clear search</a></p>
-            <ul>
-                {% for food in object_list %}
-                <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
-                {% endfor %}
-            </ul>
-
-        {% elif not object_list and query %} <!-- Displays all in DB if no results -->
-            <p>Your query "<b>{{ query }}</b>" returned no results. Below are all of the items in the DataBase. <a href='/ffdb/'>Clear search</a></p>
-            <ul>
-                {% for food in all_food_items %} 
-                <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
-                {% endfor %}
-            </ul>
             
-        {% elif all_food_items %} <!-- Displays all if no search made -->
-            <ul>
-                {% for food in all_food_items %}
-                <!-- This is supposed to use the "i" in the for loop, food, not foodItems, which I was trying to use this whole time-->
-                <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
-                <!-- Ex: "Food item Pizza is in location: 2.2"-->
-                {% endfor %}
-            </ul>
-        
-        {% else %} <!-- Displays if there is nothing in the DB -->
-            <p>There is no food in the Freezer Food DataBase</p>
+        <h1>Index of all items in the Database</h1>
 
-        {% endif %}
+            <!-- List area -->
+        <h2>Search/Index</h2>
 
-        <p>⠀</p>
+            <form action='{% url 'index' %}' method='GET'>
+                <input name='q' type='search' placeholder='Search...' id='searchbar' autofocus> <!-- search box -->
+                <button for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></button> <!--(built in) Search icon-->
+            </form>
+
+            {% if object_list %} <!-- Displays search results -->
+                <p>You searched for "<b>{{ query }}</b>". Here are your results: <a href='/ffdb/'>Clear search</a></p>
+                <ul>
+                    {% for food in object_list %}
+                    <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+                    {% endfor %}
+                </ul>
+
+            {% elif not object_list and query %} <!-- Displays all in DB if no results -->
+                <p>Your query "<b>{{ query }}</b>" returned no results. Below are all of the items in the DataBase. <a href='/ffdb/'>Clear search</a></p>
+                <ul>
+                    {% for food in all_food_items %} 
+                    <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+                    {% endfor %}
+                </ul>
+                
+            {% elif all_food_items %} <!-- Displays all if no search made -->
+                <ul>
+                    <!-- This is supposed to use the "i" in the for loop, food, not foodItems, which I was trying to use this whole time-->
+                    <!-- Ex: "Food item Pizza is in location: 2.2"-->
+                    {% for food in all_food_items %}                
+                    <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>                
+                    {% endfor %}
+                </ul>
+            
+            {% else %} <!-- Displays if there is nothing in the DB -->
+                <p>There is no food in the Freezer Food DataBase</p>
+
+            {% endif %}
+
+            <!-- confirmation area-->
+            {% if new_confirmation %}
+                <p>{{ new_confirmation }}</p></br>            
+            {% elif delete_confirmation %}
+                <p>{{ delete_confirmation }}</p></br>            
+            {% endif %}
+
+            <!-- Item creation form -->
+        <h2>Create New</h2>
+
+            <form action='' method='POST'>{% csrf_token %}
+                <label for='name'>Name of item*:</label>
+                <input name='Name' type='text' placeholder='Name' id='name' required></br>
+                
+                <label for='location'>Location of item*:</label>
+                <input name='Location' type='text' placeholder='Location, format X.X' id='location' required pattern='([1]\.[1-5])|([2]\.[1-4])|([3]\.[12])' title='X.X, eg. 1.2 or 3.1'></br>
+                
+                <label for='stock'>Number of items*:</label>
+                <input name='Number' type='Number' placeholder='Number, >=1' id='stock' min='1' required></br>
+                
+                <label for='notes'>Notes about the item:</label>
+                <textarea name='Notes' type='text' placeholder='Notes about the item' id='notes' rows='5' cols='50' maxlength='200'></textarea></br>
+
+                <input name='new_id' id='new_id' value='new_index' hidden>
+                
+                <button type='submit' for='notes' id='confirm'>Store</button>
+            </form>
+
+    
+        <!-- "Footer" -->
+        </br>
         <p><a href='/admin/ffdb/fooditems/'>Link to admin page</a></p>
     </body>
 </html>

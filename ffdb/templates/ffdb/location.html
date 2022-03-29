@@ -13,17 +13,17 @@
     
         <h1>Location of food item "{{ item.foodName }}"</h1>
 
-        <p>Location: {{item.foodLocation}}</p> 
-        {# need to insert the image, that can come later (if at all) #}
-        
-        <img src="{% static location %}" title="Location image for {{item.foodLocation}}" alt="Location image for {{item.foodLocation}}">
-        
-        <p>GIF of all possible locations</p>
-        <img src="{% static 'ffdb/animated.gif' %}" title="GIF of all possible locations" alt="GIF of all possible locations">
+            <p>Location: {{item.foodLocation}}</p> 
+            {# need to insert the image, that can come later (if at all) #}
+            
+            <img src="{% static location %}" title="Location image for {{item.foodLocation}}" alt="Location image for {{item.foodLocation}}" height='200' width='188'>
+            
+            <p>GIF of all possible locations:</p>
+            <img src="{% static 'ffdb/animated.gif' %}" title="GIF of all possible locations" alt="GIF of all possible locations">
 
-        <p>⠀</p>
-        <p><a href="/ffdb/{{item.id}}">Link back to detail page</a></p>
-        <p>⠀</p>
+        <!-- "Footer"-->
+        </br>
+        <p><a href="/ffdb/{{item.id}}">Link back to detail page</a></p></br>
         <p><a href="/ffdb">Link to index page</a></p>
         <p><a href="/admin/ffdb/fooditems/">Link to admin page</a></p>
     

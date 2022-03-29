@@ -1,9 +1,7 @@
 import datetime
-
 from django.db import models
 from django.db.models.base import Model
 from django.utils import timezone
-
 
 #* Create your models here.
 
@@ -23,3 +21,6 @@ class foodStock(models.Model):
     foodLocation = models.CharField('the location of the food item', max_length=3)
     stockNumber = models.PositiveIntegerField('the number of food items')
     foodItemss = models.ManyToManyField(foodItems)
+    def __str__(self):
+        name_str = str(foodItems.objects.filter(pk=self.id))
+        return name_str[23:-3] + "'s stock"
