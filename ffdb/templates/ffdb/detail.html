@@ -37,13 +37,13 @@
         <h2>Edit this item</h2>
             <form name='edit' action='' method='POST'>{% csrf_token %}
                 <label for='name'>Name:</label>
-                <input name='Name' type='text' value='{{ item.foodName }}' id='name' required></br>
+                <input name='Name' type='text' value='{{ item.foodName }}' id='name' maxlength='200' required></br>
                 
                 <label for='location'>Location:</label>
                 <input name='Location' type='text' value='{{ item.foodLocation }}' id='location' required pattern='([1]\.[1-5])|([2]\.[1-4])|([3]\.[12])' title='X.X, eg. 1.2 or 3.1'></br>
                 
                 <label for='stock'>Stock:</label>
-                <input name='Number' type='Number' value='{{ stock.stockNumber }}' id='stock' min='1' required></br>
+                <input name='Number' type='Number' value='{{ stock.stockNumber }}' id='stock' min='1' max='2147483647' required></br>
                 
                 <label for='notes'>Notes:</label>
                 <textarea name='Notes' type='text' id='notes' rows='5' cols='50' maxlength='200'>{{ item.foodItemNotes }}</textarea></br>
