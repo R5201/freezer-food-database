@@ -36,7 +36,8 @@
 
         <h2>Edit this item</h2>
             <form name='edit' action='' method='POST'>{% csrf_token %}
-                  <input name='Name' type='text' value='{{ item.foodName }}' id='name' required></br>
+                <label for='name'>Name:</label>
+                <input name='Name' type='text' value='{{ item.foodName }}' id='name' required></br>
                 
                 <label for='location'>Location:</label>
                 <input name='Location' type='text' value='{{ item.foodLocation }}' id='location' required pattern='([1]\.[1-5])|([2]\.[1-4])|([3]\.[12])' title='X.X, eg. 1.2 or 3.1'></br>
