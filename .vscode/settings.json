@@ -1,9 +1,12 @@
 {
     "python.pythonPath": "env\\Scripts\\python.exe",
     "cSpell.words": [
+        "endwith",
         "ffdb",
         "fooditems",
-        "Itemss"
+        "Itemss",
+        "tbody",
+        "thead"
     ],
     "cSpell.enableFiletypes": [
         "django-html"

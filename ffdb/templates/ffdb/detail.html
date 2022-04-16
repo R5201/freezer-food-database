@@ -16,22 +16,43 @@
                     }
                     else{
                         alert('cancelled')
-                        return false                                               
+                        return false                                           
                     }
 
                 }
             }
-            </script>
+        </script>
     </head>  
   
     <body>
     
         <h1>Details of food item "{{ item.foodName }}"</h1>
 
-
             <p><a href="location/">Location: {{item.foodLocation}}</a></p></br>        
             <p>Stock level: {{stock.stockNumber}}</p>
             <p>Notes: {{ item.foodItemNotes }}</p><br/>
+        
+        <h2>Change stock</h2> <!-- Easy access stock change: +/-1 -->
+            <form name='stock_add_form' action='' method='POST'> {% csrf_token %}
+                <input name='stock_id' id='stock_id' value='stockAdd_detail' hidden>
+                <input name='stock_add' id='stock_add' type='number' value='{{ stock.stockNumber }}' hidden>
+                <input name='item_id' id='item_id' value='{{ fI_id }}' hidden>
+                <button>Add Stock (+1)</button>
+            </form>
+
+            <form name='stock_remove_form' action='' method='POST'> {% csrf_token %}
+                <input name='stock_id' id='stock_id' value='stockRemove_detail' hidden>
+                <input name='stock_remove' id='stock_remove' type='number' value='{{ stock.stockNumber }}' hidden>
+                <input name='item_id' id='item_id' value='{{ fI_id }}' hidden>
+                <button>Remove Stock (-1)</button>
+            </form>
+
+            {% if stock_confirmation %} <!-- only shows if edit to stock was made -->
+                <form name='stock_refresh'>
+                    <label for='refresh'>{{ stock_confirmation }}<font color='red'> Do not update stock before refreshing!</font></label>
+                    <button id='refresh'>Refresh</button>
+                </form>
+            {% endif %}
 
 
         <h2>Edit this item</h2>
@@ -43,10 +64,10 @@
                 <input name='Location' type='text' value='{{ item.foodLocation }}' id='location' required pattern='([1]\.[1-5])|([2]\.[1-4])|([3]\.[12])' title='X.X, eg. 1.2 or 3.1'></br>
                 
                 <label for='stock'>Stock:</label>
-                <input name='Number' type='Number' value='{{ stock.stockNumber }}' id='stock' min='1' max='2147483647' required></br>
+                <input name='Number' type='Number' value='{{ stock.stockNumber }}' id='stock' min='0' max='2147483647' required></br>
                 
                 <label for='notes'>Notes:</label>
-                <textarea name='Notes' type='text' id='notes' rows='5' cols='50' maxlength='200'>{{ item.foodItemNotes }}</textarea></br>
+                <textarea name='Notes' type='text' id='notes' rows='4' cols='50' maxlength='200'>{{ item.foodItemNotes }}</textarea></br>
 
                 <input name='item_id' id='item_id' value='{{ fI_id }}' hidden> <!-- get id of current item-->
                 <input name='edit_id' id ='edit_id' value='edit_detail' hidden> <!-- for identifying what did the POST-->
@@ -55,7 +76,7 @@
             </form></br>
 
             {% if edit_confirmation %} <!-- only shows if edit was made -->
-                <form name='refresh' action=''>
+                <form name='edit_refresh' action=''>
                     <label for='refresh'>{{ edit_confirmation}}</label>
                     <button id='refresh'>Refresh</button>
                 </form></br>
@@ -63,7 +84,7 @@
 
 
         </br><h2>Delete this item</h2>
-                <form name='delete' action='{% url 'index' %}' method='POST' onsubmit="return validate()" autocomplete="off">{% csrf_token %}
+                <form name='delete' action='{% url 'index' %}' method='POST' onsubmit="return validate()" autocomplete="off"> {% csrf_token %}
 
                     <label for='deletion_confirm'>Enter the name of the item to confirm (case sensitive):</label>
                     <input name='deletion_confirm' id='deletion_confirm' placeholder='{{ item.foodName }}' pattern='{{ item.foodName }}' required>

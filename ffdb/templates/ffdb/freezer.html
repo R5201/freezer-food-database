@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+    <!!-- this is incomplete html, with no css -->
+
+{% load static %}
+{% load ffdb_tags %}
+    <head>
+        <title>Index page (freezer)</title>
+        <link rel="icon" type="image/png" href="{% static 'ffdb/favicon.png' %}">
+    </head>  
+  
+    <body>
+            
+        <h1>Index of all items in the Database, sorted by freezer</h1>
+
+            <!-- Table area -->
+        <h2>Table</h2>
+            <p>Note that items are not displayed by their locations within the freezer</p>
+                
+            {% if all_food_items_freezer %} 
+                <table border='1'>
+                    <thead>
+                        <tr>
+                            <th scope="col">Freezer 1</th>
+                            <th scope="col">Freezer 2</th>
+                            <th scope="col">Freezer 3</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+
+                        {% for item in max_length %}
+                            <tr>
+                                <td>{{ all_food_items_freezer_1|index:forloop.counter0 }}</td>
+
+                                <td>{{ all_food_items_freezer_2|index:forloop.counter0 }}</td>
+
+                                <td>{{ all_food_items_freezer_3|index:forloop.counter0 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            {% else %} <!-- Displays if there is nothing in the DB -->
+                <p>There is no food in the Freezer Food DataBase</p>
+            
+            {% endif %}
+
+        <h2>Image of freezers</h2>
+            <img src="{% static 'ffdb/0.0.png' %}" title="Image of freezers" alt="Image of freezers">
+
+        <!-- "Footer" -->
+        </br>
+        <p><a href='/ffdb/'>Link to normal index page</a></p>
+        <p><a href='/admin/ffdb/fooditems/'>Link to admin page</a></p>
+    </body>
+</html>

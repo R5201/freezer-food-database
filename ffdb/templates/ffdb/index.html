@@ -3,14 +3,16 @@
 <html>
     <!!-- this is incomplete html, with no css -->
 
-{% load static %}    
+{% load static %}
+{% load ffdb_tags %}
+
     <head>
         <title>Index page</title>
         <link rel="icon" type="image/png" href="{% static 'ffdb/favicon.png' %}">
-    </head>  
-  
+    </head>
+
     <body>
-            
+  
         <h1>Index of all items in the Database</h1>
 
             <!-- List area -->
@@ -21,28 +23,40 @@
                 <button for="searchbar"><img src="{% static "admin/img/search.svg" %}" alt="Search"></button> <!--(built in) Search icon-->
             </form>
 
-            {% if object_list %} <!-- Displays search results -->
+            {% if search_results %} <!-- Displays search results -->
                 <p>You searched for "<b>{{ query }}</b>". Here are your results: <a href='/ffdb/'>Clear search</a></p>
                 <ul>
-                    {% for food in object_list %}
-                    <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+                    {% for item in search_results %}
+                        <li><a href="/ffdb/{{ item.id }}/">Food item "{{item}}" is in location: {{ item.foodLocation }}</a></li>
                     {% endfor %}
                 </ul>
 
-            {% elif not object_list and query %} <!-- Displays all in DB if no results -->
-                <p>Your query "<b>{{ query }}</b>" returned no results. Below are all of the items in the DataBase. <a href='/ffdb/'>Clear search</a></p>
+            {% elif not search_results and query %} <!-- Displays all in DB if no results but the user searched for something-->
+                {% if query == '*ShowAll' %} <!-- special case for showing all the list without the search results message-->
+                    <p>Here are all items in the database (including those with no stock). <a href='/ffdb/'>Clear</a></p> <!-- for the fake search to see all items-->
+                {% else %}
+                    <p>Your query "<b>{{ query }}</b>" returned no results. Below are all of the items in the Database. <a href='/ffdb/'>Clear search</a></p>
+                {% endif %}
                 <ul>
-                    {% for food in all_food_items %} 
-                    <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>
+                    {% for item in all_food_items %} 
+                        <li><a href="/ffdb/{{ item.id }}/">Food item "{{item}}" is in location: {{ item.foodLocation }}</a></li>
                     {% endfor %}
                 </ul>
                 
             {% elif all_food_items %} <!-- Displays all if no search made -->
+                <form action='{% url 'index' %}' method='GET'>
+                    <p>Items with no stock <b>do not</b> appear in this list.
+                    <input name='q' id='q' value='*ShowAll' hidden>
+                    <button for='q'>Click to show all items</button>
+                </form>
                 <ul>
-                    <!-- This is supposed to use the "i" in the for loop, food, not foodItems, which I was trying to use this whole time-->
                     <!-- Ex: "Food item Pizza is in location: 2.2"-->
-                    {% for food in all_food_items %}                
-                    <li><a href="/ffdb/{{ food.id }}/">Food item "{{food}}" is in location: {{ food.foodLocation }}</a></li>                
+                    {% for item in all_food_items %}
+                        {% with stock=food_stock|index:forloop.counter0 %} <!-- sets the /stock/ variable to the item that is equivalent to the current /food/ value using the index method-->
+                            {% if stock.stockNumber != 0 %} <!-- if there is stock for the current item -->
+                                <li><a href="/ffdb/{{ item.id }}/">Food item "{{item}}" is in location: {{ item.foodLocation }}</a></li>
+                            {% endif %}
+                        {% endwith %}
                     {% endfor %}
                 </ul>
             
@@ -60,6 +74,11 @@
 
             <!-- Item creation form -->
         <h2>Create New</h2>
+            <form action='{% url 'index' %}' method='GET'>
+                <p>Items with no stock do not appear in the default list!
+                <input name='q' id='q' value='*ShowAll' hidden>
+                <button for='q'>Click to show all items</button>
+            </form>
 
             <form action='' method='POST'>{% csrf_token %}
                 <label for='name'>Name of item*:</label>
@@ -72,9 +91,9 @@
                 <input name='Number' type='Number' placeholder='Number, >=1' id='stock' min='1' max='2147483647' required></br>
                 
                 <label for='notes'>Notes about the item:</label>
-                <textarea name='Notes' type='text' placeholder='Notes about the item' id='notes' rows='5' cols='50' maxlength='200'></textarea></br>
+                <textarea name='Notes' type='text' placeholder='Notes about the item' id='notes' rows='4' cols='50' maxlength='200'></textarea></br>
 
-                <input name='new_id' id='new_id' value='new_index' hidden>
+                <input name='new_id' id='new_id' value='new_index' hidden> <!-- for identifying what did the POST-->
                 
                 <button type='submit' for='notes' id='confirm'>Store</button>
             </form>
@@ -82,6 +101,7 @@
     
         <!-- "Footer" -->
         </br>
+        <p><a href='/ffdb/freezer/'>Link to items sorted by freezer</a></p>
         <p><a href='/admin/ffdb/fooditems/'>Link to admin page</a></p>
     </body>
 </html>
